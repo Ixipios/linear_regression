@@ -1,8 +1,11 @@
 from math import sqrt
-from random import randint
+from random import randint, SystemRandom
+import matplotlib.pyplot as plt
+import numpy as np
 
 points1 = [(2, 23), (4, 37.5), (8, 80.34), (9, 98)]  # couples (x,y)
-points2 = [(1, 3), (3, 9), (4, 12), (6, 18), (7, 21)]
+n = 40
+points2 = [(i, 2*i+3+round(SystemRandom().uniform(-n/5, n/5), 3)) for i in range(n)]
 
 
 def gradient(f, x):
@@ -96,5 +99,14 @@ a1 = gradient_descent1(lambda a: cost_func(points1, lambda x: a*x), 0.01, 1)
 # print(gradient_descent(lambda a: cost_func(points1, lambda x: a*x), 0.01, 0.001))
 
 
-print(gradient_descent2(lambda a, b: cost_func(points2, lambda x: a*x+b), 0.0001, 2, 0.01))
+coefficients = gradient_descent2(lambda a, b: cost_func(points2, lambda x: a*x+b), 0.001, 2, 0.001)
+print(coefficients)
 # print(gradient_descent2(lambda x, y: x**2+y**2, 0.1, 2))
+a, b = coefficients
+x_list = [i[0] for i in points2]
+y_list = [i[1] for i in points2]
+t = np.arange(0, max(x_list)+1, 0.2)
+plt.plot(x_list, y_list, "x")
+plt.plot(t, a*t+b)
+plt.axis([0, max(x_list)+2, 0, max(y_list)+2])
+plt.show()
